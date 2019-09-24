@@ -1,0 +1,143 @@
+A Create Project with Eclipse
+ 	-goto File->New->Other->Maven Project->Next
+ 	-1.choose Archtype
+ 		-select artifact id-> Maven-archetype-webapp->Next
+ 	-2.Enter Details
+ 		- Group id =   reverse of domain eg.	"com.amol"
+ 		- Artifact id= Project/website Name eg. "facebook"
+ 	-3.Entyer Finish.
+
+B Add Dependancy
+ 	-goto "https://mvnrepository.com/" and select required dependancy (xml) code
+ 	-Add dependancy to pom.xml to dependancies section
+ 	-Add plugins which you required in plugin section
+
+C Add/Modify Deployement discripter(web.xml)					-front controller
+ 	
+ 	I.>
+ 	-for partially annotation based Configuration
+ 		-goto src->main->webapp->WEB-INF->web.xml
+ 			-Add dispatcher servlet detail
+ 				eg. 
+ 				web.xml
+ 					<!DOCTYPE web-app PUBLIC
+					 "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+					 "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+					<web-app>
+					  <display-name>Archetype Created Web Application</display-name>
+					  
+					  <servlet>
+					  	<servlet-name>Amol</servlet-name>
+					  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+					  </servlet>
+					  <servlet-mapping>
+					  	<servlet-name>Amol</servlet-name>
+					  	<url-pattern>/</url-pattern>
+					  </servlet-mapping>
+					
+					</web-app>	
+
+
+ 	II.>
+ 	-for fully annotation based configuration
+ 		
+ 		-goto src->main->java->com->amol(group id name folder)->
+ 			-create new class in this folder
+ 				-rightclick on currunt folder->new->class
+ 				-name it as WebConfig.java
+ 			-open this class WebConfig.java
+ 				-Add @Configuration notation on the just above of class declearation.
+ 				-Add @ComponentScan nottation just belove of @Configuration
+ 				-Add Path of your controller just right of @ComponentScan annotation
+ 					eg. @ComponentScan("com.amol(controllerPath)")
+
+D Create helper deloyement discripter(something-servlet.xml)	-helper controller
+ 	
+ 	I.>
+ 	- For partially annotation based
+ 		-goto src->main->webapp->WEB-INF->
+ 			-Create new XML file and name it as "something-servlet.xml"
+ 			-where sometthing is the servlet name which you decleare in web.xml
+ 			-in my case it is Amol
+ 			-so my file name is Amol-servlet.xml
+ 			Add Some detailse about you are using annotation and base packeage name
+
+ 			eg.
+ 			Amol-servlet.xml
+
+ 				<?xml version="1.0" encoding="UTF-8"?>
+				<beans xmlns="http://www.springframework.org/schema/beans"
+				xmlns:ctx="http://www.springframework.org/schema/context"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xmlns:mvc="http://www.springframework.org/schema/mvc"
+				xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/mvc
+				http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+				http://www.springframework.org/schema/context
+				http://www.springframework.org/schema/context/spring-context-2.5.xsd ">
+
+				One tag is missing here.
+				<ctx:annotation-config/>
+				<ctx:component-scan base-package="com.amol"></ctx:component-scan>
+				</beans>
+
+ 	II.>
+ 	-For fully annotation based
+
+	 	-goto src->main->java->com->amol(group id name folder)->
+	 	-create new class in this folder
+ 				-rightclick on currunt folder->new->class
+ 				-name it as WebInit.java Extend AbstractAnnotationConfigDispatcherServletInitializer class
+ 				eg.
+ 				WebInit.java
+	 				public class Webinitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+					@Override
+					protected Class<?>[] getRootConfigClasses() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+
+					@Override
+					protected Class<?>[] getServletConfigClasses() {
+						// TODO Auto-generated method stub
+						return new Class[] {WebConfig.class};  <-WebConfig.class name
+					}
+
+					@Override
+					protected String[] getServletMappings() {
+						// TODO Auto-generated method stub
+						return new String[]{"/"};
+					}
+
+					}
+
+E Add controller for user request/user input					-request comtroller
+ 	-goto src->main-> create folder as java
+ 	-goto src->main->java->create java class as MyController.java
+ 	-open MyController.java add @Component notation just above of class declearation
+ 	-then add @RequestMapping annotation before any requestedd code	
+
+F Add Internal View Resolver
+ 	-goto src->main->java->com->amol->java->WebConfig.java
+ 		-add method as 
+
+ 		@Bean
+ 		public InternalViewResolver getViewResolver(){
+ 			InternalResourceViewResolver ivr = new InternalResourceViewResolver();
+
+	 		ivr.setPrefix("/WEB-INF/views/");
+			ivr.setSuffix(".jsp");
+			
+			return ivr;
+	 		}
+
+ 		dont forget to mention a @Bean annotation just above the method.
+
+G Add Serever to the project
+	-goto project->right click->properties->Targetd Runtime->select available server and add it.
+	-if you dont have any server to your eclipse you should add one and add it first.
+
+H Run the project
